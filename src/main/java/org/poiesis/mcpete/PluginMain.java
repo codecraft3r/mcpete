@@ -1,11 +1,9 @@
 package org.poiesis.mcpete;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.poiesis.mcpete.commands.MuseCommandExecutor;
 
 public class PluginMain extends JavaPlugin implements Listener {
 
@@ -13,11 +11,15 @@ public class PluginMain extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
+        // save the default config, if it doesn't exist already
         saveDefaultConfig();
+        // get the API key from the config, and make it available to the rest of the plugin
         OPENAIAPIKEY = getConfig().getString("openaiapikey");
 
+        /* COMMANDS */
 
-        getCommand("muse").setExecutor(new MuseCommand());
+        // register the /muse command
+        getCommand("muse").setExecutor(new MuseCommandExecutor());
 
     }
 
