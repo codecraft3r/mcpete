@@ -1,5 +1,9 @@
 name: McPete
 version: 1.0
-main: io.papermc.mcpete.McPetePlugin
+main: org.poiesis.mcpete.PluginMain
 author: Nathan
 description: My awesome plugin!
+commands:
+  muse:
+    description: Ask GPT-3.5 a question
+    usage: /muse <input...>
