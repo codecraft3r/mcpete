@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.poiesis.mcpete.helpers.OpenAiHelper;
 import org.poiesis.mcpete.PluginMain;
 
@@ -12,22 +13,22 @@ import java.util.List;
 
 public class MuseCommandExecutor implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         //check if the sender is a player
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             //check if the command is /muse
             if (command.getName().equalsIgnoreCase("muse")) {
                 // ensure that we've got at least one argument
                 if(args.length == 0) {
                     return false;
                 }
-                if (args.length >= 1) {
+                else {
                     // construct the message from the arguments as each argument is separated by a space
-                    String message = "";
-                    for (int i = 0; i < args.length; i++) {
-                        message += args[i] + " ";
+                    StringBuilder messageBuilder = new StringBuilder();
+                    for (String arg : args) {
+                        messageBuilder.append(arg).append(" ");
                     }
+                    String message = messageBuilder.toString();
                     // make sure the message isn't empty
                     if (message.length() == 0) {
                         return false;
