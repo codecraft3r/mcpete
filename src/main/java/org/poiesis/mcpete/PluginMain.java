@@ -19,7 +19,7 @@ public class PluginMain extends JavaPlugin implements Listener {
         /* COMMANDS */
 
         // register the /muse command
-        getCommand("muse").setExecutor(new MuseCommandExecutor());
+        getCommand("muse").setExecutor(new MuseCommandExecutor(this));
 
     }
 

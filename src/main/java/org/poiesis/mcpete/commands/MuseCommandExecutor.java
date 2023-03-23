@@ -1,6 +1,7 @@
 package org.poiesis.mcpete.commands;
 
 import com.theokanning.openai.completion.chat.ChatMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,11 @@ import org.poiesis.mcpete.PluginMain;
 import java.util.List;
 
 public class MuseCommandExecutor implements CommandExecutor {
+    private final PluginMain plugin;
+
+    public MuseCommandExecutor(PluginMain plugin) {
+        this.plugin = plugin;
+    }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         //check if the sender is a player
@@ -36,8 +42,10 @@ public class MuseCommandExecutor implements CommandExecutor {
 
                     // pipe the message through the OpenAI API and send the response to the player
                     player.sendMessage("Generating response, please wait...");
-                    String output = processInput(message, player.getName());
-                    player.sendMessage(output);
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        String response = processInput(message, player.getName());
+                        player.sendMessage(response);
+                    });
                     return true;
                 }
             }
