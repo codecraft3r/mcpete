@@ -2,6 +2,7 @@ package org.poiesis.mcpete.commands;
 
 import com.theokanning.openai.completion.chat.ChatMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,7 +44,7 @@ public class GenCommandExecutor implements CommandExecutor {
 
                     player.sendMessage("Generating command, please wait...");
                     // pipe the message through the OpenAI API and send the response to the player ASYNCHRONOUSLY
-                    CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> generate(message, player.getName()));
+                    CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> generate(message, player.getName(), player.getLocation()));
 
                     future.thenAccept(response -> {
                         Bukkit.getScheduler().runTask(plugin, () -> {
@@ -61,9 +62,10 @@ public class GenCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private String generate(String input, String playerName) {
+    private String generate(String input, String playerName, Location playerPosition) {
+
         //construct the prompt from a system message and a user message
-        List<ChatMessage> messages = List.of(new ChatMessage("system", "You are a helpful minecraft assistant"), new ChatMessage("user", "Give me a series of minecraft commands, seperated by newlines, that will: '" + input + "'. Return ONLY the commands, without leading / symbols"));
+        List<ChatMessage> messages = List.of(new ChatMessage("system", "You are a helpful minecraft assistant"), new ChatMessage("user", "Player Info" + "Location='" + playerPosition.toBlockLocation().toString()+ "' Name='" + playerName + "'. Give me a series of minecraft commands, separated by newlines, that will: '" + input + "'. Return ONLY the commands, without leading / symbols"));
         //create a new OpenAiClient with your API key
         OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OPENAIAPIKEY);
         //get the completion from the OpenAiClient
