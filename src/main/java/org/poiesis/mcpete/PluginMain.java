@@ -3,7 +3,7 @@ package org.poiesis.mcpete;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.poiesis.mcpete.commands.MuseCommandExecutor;
+import org.poiesis.mcpete.commands.GenCommandExecutor;
 
 public class PluginMain extends JavaPlugin implements Listener {
 
@@ -18,12 +18,9 @@ public class PluginMain extends JavaPlugin implements Listener {
 
         /* COMMANDS */
 
-        // register the /muse command
-        getCommand("muse").setExecutor(new MuseCommandExecutor(this));
+        // register the /genCommand command
+        getCommand("genCommand").setExecutor(new GenCommandExecutor(this));
 
     }
-
-
-
 
 }

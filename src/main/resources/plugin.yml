@@ -4,6 +4,6 @@ main: org.poiesis.mcpete.PluginMain
 author: Nathan
 description: My awesome plugin!
 commands:
-  muse:
-    description: Ask GPT-3.5 a question
-    usage: /muse <input...>
+  genCommand:
+    description: Make GPT-3.5 generate and execute a command for you
+    usage: /genCommand <input...>

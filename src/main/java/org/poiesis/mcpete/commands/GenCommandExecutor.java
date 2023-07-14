@@ -11,11 +11,12 @@ import org.poiesis.mcpete.helpers.OpenAiHelper;
 import org.poiesis.mcpete.PluginMain;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public class MuseCommandExecutor implements CommandExecutor {
+public class GenCommandExecutor implements CommandExecutor {
     private final PluginMain plugin;
 
-    public MuseCommandExecutor(PluginMain plugin) {
+    public GenCommandExecutor(PluginMain plugin) {
         this.plugin = plugin;
     }
     @Override
@@ -23,7 +24,7 @@ public class MuseCommandExecutor implements CommandExecutor {
         //check if the sender is a player
         if (sender instanceof Player player) {
             //check if the command is /muse
-            if (command.getName().equalsIgnoreCase("muse")) {
+            if (command.getName().equalsIgnoreCase("genCommand")) {
                 // ensure that we've got at least one argument
                 if(args.length == 0) {
                     return false;
@@ -40,12 +41,19 @@ public class MuseCommandExecutor implements CommandExecutor {
                         return false;
                     }
 
-                    // pipe the message through the OpenAI API and send the response to the player
-                    player.sendMessage("Generating response, please wait...");
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                        String response = processInput(message, player.getName());
-                        player.sendMessage(response);
+                    player.sendMessage("Generating command, please wait...");
+                    // pipe the message through the OpenAI API and send the response to the player ASYNCHRONOUSLY
+                    CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> generate(message, player.getName()));
+
+                    future.thenAccept(response -> {
+                        Bukkit.getScheduler().runTask(plugin, () -> {
+                            String[] commands = response.split("\n");
+                            for (String cmd : commands) {
+                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmd);
+                            }
+                        });
                     });
+
                     return true;
                 }
             }
@@ -53,14 +61,17 @@ public class MuseCommandExecutor implements CommandExecutor {
         return false;
     }
 
-    private String processInput(String input, String playerName) {
+    private String generate(String input, String playerName) {
         //construct the prompt from a system message and a user message
-        List<ChatMessage> messages = List.of(new ChatMessage("system", "You are a helpful minecraft assistant"), new ChatMessage("user", playerName + ": " + input));
+        List<ChatMessage> messages = List.of(new ChatMessage("system", "You are a helpful minecraft assistant"), new ChatMessage("user", "Give me a series of minecraft commands, seperated by newlines, that will: '" + input + "'. Return ONLY the commands, without leading / symbols"));
         //create a new OpenAiClient with your API key
         OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OPENAIAPIKEY);
         //get the completion from the OpenAiClient
         ChatMessage completion = openAiHelper.getChatCompletion("gpt-3.5-turbo", messages);
         //return completion.content
+        if (completion == null) {
+            return "say error";
+        }
         return completion.getContent();
     }
 }
