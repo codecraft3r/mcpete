@@ -25,7 +25,7 @@ public class GenCommandExecutor implements CommandExecutor {
         //check if the sender is a player
         if (sender instanceof Player player) {
             //check if the command is /muse
-            if (command.getName().equalsIgnoreCase("genCommand")) {
+            if (command.getName().equalsIgnoreCase("gencommand")) {
                 // ensure that we've got at least one argument
                 if(args.length == 0) {
                     return false;
@@ -58,6 +58,8 @@ public class GenCommandExecutor implements CommandExecutor {
                     return true;
                 }
             }
+        } else {
+            sender.sendMessage("You must be a player to use this command.");
         }
         return false;
     }
