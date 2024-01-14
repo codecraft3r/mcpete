@@ -94,9 +94,12 @@ public class ConversationalAgentListener implements Listener {
         // make the call to the OpenAI API
 
         //create a new OpenAiClient with your API key
-        OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OPENAIAPIKEY);
+        OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OAI_API_KEY);
+        while (messages.toString().length() > 19000) {
+            messages.remove(3);
+        }
         //get the completion from the OpenAiClient
-        ChatMessage completion = openAiHelper.getChatCompletion("gpt-3.5-turbo", messages);
+        ChatMessage completion = openAiHelper.getChatCompletion("gpt-3.5-turbo-1106", messages);
         if (completion == null) {
             return "Error generating response";
         }

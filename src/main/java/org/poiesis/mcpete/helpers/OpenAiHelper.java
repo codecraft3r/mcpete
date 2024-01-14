@@ -24,4 +24,5 @@ public class OpenAiHelper {
         return completion.getChoices().get(0).getMessage();
     }
 
+
 }

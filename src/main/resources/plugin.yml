@@ -1,5 +1,5 @@
 name: McPete
-version: 1.0
+version: 1.1
 main: org.poiesis.mcpete.PluginMain
 author: Nathan
 description: My awesome plugin!

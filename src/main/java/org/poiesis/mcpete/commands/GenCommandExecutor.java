@@ -69,9 +69,9 @@ public class GenCommandExecutor implements CommandExecutor {
         //construct the prompt from a system message and a user message
         List<ChatMessage> messages = List.of(new ChatMessage("system", "You are a helpful minecraft assistant"), new ChatMessage("user", "Player Info: " + "Location='" + playerPosition.toBlockLocation().toString()+ "' Name='" + playerName + "'. Give me a series of minecraft commands, separated by newlines, that will: '" + input + "'. Return ONLY the commands, without leading / symbols"));
         //create a new OpenAiClient with your API key
-        OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OPENAIAPIKEY);
+        OpenAiHelper openAiHelper = new OpenAiHelper(PluginMain.OAI_API_KEY);
         //get the completion from the OpenAiClient
-        ChatMessage completion = openAiHelper.getChatCompletion("gpt-3.5-turbo", messages);
+        ChatMessage completion = openAiHelper.getChatCompletion("gpt-3.5-turbo-1106", messages);
         //return completion.content
         if (completion == null) {
             return "say error";
